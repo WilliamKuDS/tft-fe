@@ -14,7 +14,6 @@ interface IFormInput {
     player_region: string
 }
 
-
 export default function PlayerForm() {
     const [playerData, setPlayerData] = useState()
     const {control, handleSubmit} = useForm({
