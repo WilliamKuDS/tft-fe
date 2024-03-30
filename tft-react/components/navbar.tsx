@@ -9,7 +9,7 @@ import {
     NavbarMenuItem,
 } from "@nextui-org/navbar";
 import {Kbd} from "@nextui-org/kbd";
-import {Input} from "@nextui-org/input";
+import {Input} from "@nextui-org/react";
 import {link as linkStyles} from "@nextui-org/theme";
 import {siteConfig} from "@/config/site";
 import {Link} from "@nextui-org/react";

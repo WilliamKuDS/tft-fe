@@ -1,6 +1,6 @@
 'use client'
 import React from "react";
-import {Button} from "@nextui-org/button";
+import {Button} from "@nextui-org/react";
 
 export function SearchButton() {
     return (

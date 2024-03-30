@@ -1,6 +1,6 @@
 'use client'
 import {useForm, SubmitHandler, Controller} from "react-hook-form"
-import {Input} from "@nextui-org/input";
+import {Input} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/select";
 import {regions} from "@/app/tft/search/data";
 import {Spacer} from "@nextui-org/spacer";

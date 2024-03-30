@@ -1,7 +1,7 @@
 'use client'
 import {Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from "@nextui-org/react";
 import {NavbarItem} from "@nextui-org/navbar";
-import {Button} from "@nextui-org/button";
+import {Button} from "@nextui-org/react";
 import {Link} from "@nextui-org/link";
 import {useState} from "react";
 
