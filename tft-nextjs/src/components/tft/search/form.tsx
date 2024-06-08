@@ -6,7 +6,7 @@ import { Select, SelectItem } from '@nextui-org/select'
 import { Spacer } from '@nextui-org/spacer'
 import { SearchButton } from '@/components/tft/buttons';
 import {regions} from "@/app/tft/search/data";
-import { GetPlayer} from "@/components/tft/django_api"
+import { get_puuid_from_account_name_tag } from "@/components/tft/riot_api"
 
 export default function SearchPlayerForm() {
     const [gameName, setGameName] = useState('');
@@ -36,12 +36,16 @@ export default function SearchPlayerForm() {
         }
         // // Proceed with form submission
         setErrorMessage(''); // Clear the error message if validation passes
-        console.log({ gameName, tagline, region });
-        const rawFormData = {
-            player_name: gameName + '-' + tagline,
-            region: region,
+        const response = await get_puuid_from_account_name_tag(gameName, tagline, region)
+
+        if (response === 'dne') {
+            setErrorMessage('Player does not exist');
+            return;
         }
-        const response = await GetPlayer(rawFormData, true)
+        else if (response == 'failed') {
+            setErrorMessage('Server Error. Please try again');
+            return;    
+        }
     };
 
     return (

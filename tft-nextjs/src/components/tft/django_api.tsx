@@ -1,20 +1,34 @@
 'use server'
 import {redirect} from "next/navigation";
 
-export async function GetPlayer(playerData: any, redirectBool: boolean) {
-    const response = await fetch("http://127.0.0.1:8000/tft/player", {
-        method: "POST", // *GET, POST, PUT, DELETE, etc.
+export async function GetPlayerByPUUID(puuid: string, region: string) {
+    const response = await fetch("http://127.0.0.1:8000/tft/playerid", {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
-        body: JSON.stringify(playerData),
+        headers: {
+            "puuid": puuid,
+            "region": region
+        },
+    });
+    if (!response.ok) {
+        return (true)
+    }
+
+}
+
+export async function GetPlayerDataFromNameAndTag(playerName: string) {
+    const response = await fetch("http://127.0.0.1:8000/tft/player", {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
+        headers: {
+            "playerName": playerName
+        },
     });
 
     if (!response.ok) {
         throw new Error('Failed to fetch data')
     }
     const data = await response.json()
-    if (redirectBool) {
-        redirect(`/tft/player/${data['region']}/${data['player_name']}/`)
-    }
     return data
 }
 

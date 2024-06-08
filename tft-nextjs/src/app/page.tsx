@@ -6,7 +6,7 @@ export default function Home() {
 			<div className="inline-block max-w-lg text-center justify-center">
 				<h1 className={title()}>Welcome to</h1>
 				<h1 className={title({ color: "violet" })}>williamku.dev</h1>
-				<h1 className={title()}>Enjoy your stay, I guess</h1>
+				<h1 className={subtitle()}>Enjoy your stay, I guess</h1>
 				<br />
 			</div>
 		</section>
