@@ -4,7 +4,7 @@ import {Spacer} from "@nextui-org/spacer";
 import {GameTable} from "@/components/tft/player/game-table";
 import {StatCard} from "@/components/tft/player/stat-card"
 import {RefreshButton} from "@/components/tft/buttons"
-import {GetSummonerDataFromPUUIDRegion, GetMatchDataFromPUUIDRegion} from "@/components/tft/django_api";
+import {GetSummonerDataFromPUUIDRegion, GetPlayerMatchDataFromPUUIDRegion, GetBasicPlayerMatchDataFromPUUIDRegion} from "@/components/tft/django_api";
 import {Divider} from "@nextui-org/divider";
 import {Image} from "@nextui-org/image"
 import React from "react";
@@ -56,6 +56,19 @@ function PlayerRankData(playerData: any) {
     return null;
 }
 
+function LastUpdatedText(lastUpdate: any) {
+    if (lastUpdate.lastUpdate !== undefined) {
+        return (
+            <p>Last Updated: {new Date(lastUpdate.lastUpdate).toLocaleString()}</p>
+        )
+    }
+    else {
+        return (
+            <p>Last Updated: Never</p>
+        )    
+    }
+}
+
 function PlayerStatCard(playerData: any) {
     if (Object.values(playerData.playerData).length !== 0)
         return (
@@ -76,9 +89,7 @@ export default async function Home(params: any) {
     )
 
     const playerData = await GetSummonerDataFromPUUIDRegion(accountData[3], accountData[2])
-    const matchData = await GetMatchDataFromPUUIDRegion(accountData[3], accountData[2])
-    console.log(matchData)
-
+    const basicPlayerMatchData = await GetBasicPlayerMatchDataFromPUUIDRegion(accountData[3], accountData[2])
 
     return (
     <div>
@@ -93,13 +104,15 @@ export default async function Home(params: any) {
         <Spacer y={5}/>
         <div>
             <RefreshButton params={accountData}/>
+            <Spacer y={1}/>
+            <LastUpdatedText lastUpdate={playerData.last_updated}/>
             <Spacer y={2}/>
             <PlayerStatCard playerData={playerData}/>
         </div>
         <Spacer y={5}/>
         <Divider orientation='horizontal'/>
         <Spacer y={5}/>
-        {/* <GameTable playerGames={promise.gameinfo} playerID={promise.playerID}/> */}
+        <GameTable params={basicPlayerMatchData}/>
     </div>
     );
 }

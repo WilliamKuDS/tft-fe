@@ -3,20 +3,20 @@ import {Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@
 import React from "react";
 import {GameAccordion} from "@/components/tft/player/game-accordion";
 
-export function GameTable(playerGames: any) {
-    const playerID = playerGames.playerID
-    const games = playerGames.playerGames
+
+export function GameTable(params: any) {
+    const matches = params.params
 
     return (
         <Table hideHeader removeWrapper isCompact layout='fixed' aria-label="GameTable">
             <TableHeader>
                 <TableColumn>Games</TableColumn>
             </TableHeader>
-            <TableBody items={games} emptyContent={"No games to display."}>
-                {(item) => (
-                    <TableRow key={item.game_id}>
+            <TableBody items={matches} emptyContent={"No games to display."}>
+                {(item: any) => (
+                    <TableRow key={item.match_id}>
                         <TableCell>
-                            <GameAccordion gameData={item} playerID={playerID}/>
+                            <GameAccordion gameData={item}/>
                         </TableCell>
                     </TableRow>
                 )}

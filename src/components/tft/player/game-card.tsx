@@ -1,5 +1,5 @@
 'use client'
-import {GetPlayerGames} from "@/components/tft/django_api";
+import {GetDetailedPlayerMatchDataFromPUUIDRegion} from "@/components/tft/django_api";
 import React, {useEffect} from "react";
 import {
     Card,
@@ -17,7 +17,7 @@ export function GameCard(data: any) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await GetPlayerGames(data.player_id, data.game_id);
+                const response = await GetDetailedPlayerMatchDataFromPUUIDRegion(data.match_id);
                 setGame(response);
             } catch (error) {
                 console.error(error);
@@ -49,17 +49,17 @@ export function GameCard(data: any) {
             {/*<Divider/>*/}
             <CardBody>
                 <div style={{display: "flex", flexDirection: "row"}}>
-                    <SummaryContainer level={game.level} round={game.round} length={game.length}/>
+                    <SummaryContainer matchInfo={game.match_info}/>
                     <div>
-                        <TraitContainer data={game.game_trait_id}/>
+                        {/* <TraitContainer data={game.game_trait_id}/> */}
                         <Spacer y={2}/>
-                        <AugmentContainer data={game.augment_id}/>
+                        {/* <AugmentContainer data={game.augment_id}/> */}
                     </div>
                 </div>
                 <Spacer y={5}/>
 
                 <Spacer y={10}/>
-                <UnitContainer data={game.game_unit_id}/>
+                {/* <UnitContainer data={game.game_unit_id}/> */}
             </CardBody>
             {/*<Divider/>*/}
             {/*<CardFooter>*/}

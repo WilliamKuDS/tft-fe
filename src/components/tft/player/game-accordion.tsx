@@ -60,14 +60,14 @@ export function GameAccordion(gameData: any) {
                             {gameData.gameData.date}
                         </div>
                         <div style={{marginLeft: "auto"}}>
-                            Patch: {gameData.gameData.patch_id_id}
+                            Patch: {gameData.gameData.patch}
                         </div>
                     </div>
                 }
             >
                 <Divider orientation='horizontal'/>
                 <Spacer y={1}/>
-                <GameCard game_id={gameData.gameData.game_id} player_id={gameData.playerID}/>
+                <GameCard match_id={gameData.gameData.match_id}/>
             </AccordionItem>
         </Accordion>
     )

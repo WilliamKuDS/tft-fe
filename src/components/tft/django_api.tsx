@@ -20,7 +20,7 @@ export async function FindAccount(account_data: AccountData) {
 }
 
 export async function GetSummonerDataFromPUUIDRegion(puuid: string, region: string) {
-    const response = await fetch("http://127.0.0.1:8000/tft/summoner/read", {
+    const response = await fetch("http://127.0.0.1:8000/tft/summoner", {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
         headers: {
@@ -40,7 +40,7 @@ export async function GetSummonerDataFromPUUIDRegion(puuid: string, region: stri
 
 }
 
-export async function GetMatchDataFromPUUIDRegion(puuid: string, region: string) {
+export async function GetPlayerMatchDataFromPUUIDRegion(puuid: string, region: string) {
     const response = await fetch("http://127.0.0.1:8000/tft/match", {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
@@ -57,7 +57,48 @@ export async function GetMatchDataFromPUUIDRegion(puuid: string, region: string)
     else {
         const data = {}
         return data
+    }
+
 }
+
+export async function GetBasicPlayerMatchDataFromPUUIDRegion(puuid: string, region: string) {
+    const response = await fetch("http://127.0.0.1:8000/tft/match/basic", {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
+        headers: {
+            "puuid": puuid,
+            "region": region
+        },
+    });
+
+    if (response.ok) {
+        const data = await response.json()
+        return data
+    }
+    else {
+        const data = {}
+        return data
+    }
+
+}
+
+export async function GetDetailedPlayerMatchDataFromPUUIDRegion(match_id: string) {
+    const response = await fetch("http://127.0.0.1:8000/tft/match/detailed", {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
+        headers: {
+            "matchID": match_id
+        },
+    });
+
+    if (response.ok) {
+        const data = await response.json()
+        return data
+    }
+    else {
+        const data = {}
+        return data
+    }
 
 }
 
