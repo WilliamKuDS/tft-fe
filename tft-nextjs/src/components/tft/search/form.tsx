@@ -6,7 +6,7 @@ import { Select, SelectItem } from '@nextui-org/select'
 import { Spacer } from '@nextui-org/spacer'
 import { SearchButton } from '@/components/tft/buttons';
 import {regions} from "@/app/tft/search/data";
-import { get_puuid_from_account_name_tag } from "@/components/tft/riot_api"
+import { GetPUUIDFromAccountNameAndTag } from "@/components/tft/riot_api"
 
 export default function SearchPlayerForm() {
     const [gameName, setGameName] = useState('');
@@ -36,7 +36,7 @@ export default function SearchPlayerForm() {
         }
         // // Proceed with form submission
         setErrorMessage(''); // Clear the error message if validation passes
-        const response = await get_puuid_from_account_name_tag(gameName, tagline, region)
+        const response = await GetPUUIDFromAccountNameAndTag(gameName, tagline, region)
 
         if (response === 'dne') {
             setErrorMessage('Player does not exist');

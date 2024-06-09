@@ -1,8 +1,68 @@
 'use server'
 import {redirect} from "next/navigation";
+import { AccountData } from './types';
 
-export async function GetPlayerByPUUID(puuid: string, region: string) {
-    const response = await fetch("http://127.0.0.1:8000/tft/playerid", {
+
+export async function FindAccount(account_data: AccountData) {
+    const response = await fetch("http://127.0.0.1:8000/tft/account", {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
+        headers: {
+            "puuid": account_data.puuid,
+            "gameName": account_data.gameName,
+            "tagLine": account_data.tagLine
+        },
+    });
+    if (!response.ok) {
+        return (true)
+    }
+
+}
+
+export async function GetSummonerDataFromPUUIDRegion(puuid: string, region: string) {
+    const response = await fetch("http://127.0.0.1:8000/tft/summoner/read", {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
+        headers: {
+            "puuid": puuid,
+            "region": region
+        },
+    });
+
+    if (response.ok) {
+        const data = await response.json()
+        return data
+    }
+    else {
+        const data = {}
+        return data
+    }
+
+}
+
+export async function GetMatchDataFromPUUIDRegion(puuid: string, region: string) {
+    const response = await fetch("http://127.0.0.1:8000/tft/match", {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
+        headers: {
+            "puuid": puuid,
+            "region": region
+        },
+    });
+
+    if (response.ok) {
+        const data = await response.json()
+        return data
+    }
+    else {
+        const data = {}
+        return data
+}
+
+}
+
+export async function UpdatePlayerProfileData(puuid: string, region: string) {
+    const response = await fetch("http://127.0.0.1:8000/tft/profile", {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
         headers: {
@@ -16,21 +76,20 @@ export async function GetPlayerByPUUID(puuid: string, region: string) {
 
 }
 
-export async function GetPlayerDataFromNameAndTag(playerName: string) {
+export async function UpdateMatchData(puuid: string) {
     const response = await fetch("http://127.0.0.1:8000/tft/player", {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
         headers: {
-            "playerName": playerName
+            "puuid": puuid
         },
     });
-
     if (!response.ok) {
-        throw new Error('Failed to fetch data')
+        return (true)
     }
-    const data = await response.json()
-    return data
+
 }
+
 
 export async function GetPlayerID(playerID: number) {
     const rawFormData = {

@@ -4,7 +4,6 @@ import { Card, CardBody } from '@nextui-org/card';
 import { Chip } from '@nextui-org/chip'
 
 export function StatCard(playerStats: any) {
-    console.log(playerStats)
     return (
             <Card
             isBlurred
