@@ -3,6 +3,7 @@ import {Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@
 import React, { useEffect, useState } from "react";
 import {GameAccordion} from "@/components/tft/player/game-accordion";
 import { GetBasicPlayerMatchDataFromPUUIDRegion } from "../django_api";
+import { Spinner } from "@nextui-org/spinner";
   
 interface MatchData {
     match_id: string;
@@ -19,6 +20,8 @@ export function GameTable({ puuid, region }: { puuid: string, region: string }) 
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false); 
     const [hasMoreData, setHasMoreData] = useState(true);
+    const fetchedMatchIds = new Set<string>();
+    const [showEmptyContent, setShowEmptyContent] = useState(false);
 
     useEffect(() => {
         const fetchItems = async () => {
@@ -31,7 +34,11 @@ export function GameTable({ puuid, region }: { puuid: string, region: string }) 
                 setHasMoreData(false); 
                 return;
             }
-            setMatchData((prevItems) => [...prevItems, ...fetchedData]);
+
+            const newMatches = fetchedData.filter((match: { match_id: string; }) => !fetchedMatchIds.has(match.match_id));
+            newMatches.forEach((match: { match_id: string; }) => fetchedMatchIds.add(match.match_id));
+            setMatchData((prevItems) => [...prevItems, ...newMatches]);
+
           } catch (error) {
             console.error("Error fetching items:", error);
           } finally {
@@ -41,6 +48,18 @@ export function GameTable({ puuid, region }: { puuid: string, region: string }) 
     
         fetchItems();
       }, [page, puuid, region]);
+
+    useEffect(() => {
+        if (loading) {
+          const timeout = setTimeout(() => {
+            setShowEmptyContent(true);
+          }, 1000); // Delay of 1 second
+    
+          return () => clearTimeout(timeout);
+        } else {
+          setShowEmptyContent(false);
+        }
+      }, [loading]);
 
     useEffect(() => {
         const onscroll = () => {
@@ -64,7 +83,7 @@ export function GameTable({ puuid, region }: { puuid: string, region: string }) 
             <TableHeader>
                 <TableColumn>Games</TableColumn>
             </TableHeader>
-            <TableBody items={matchData} emptyContent={"No games to display."}>
+            <TableBody items={matchData} emptyContent={showEmptyContent ? "No games to display." : <Spinner label="Loading..." color="warning" />}>
                 {(item: any) => (
                     <TableRow key={item.match_id}>
                         <TableCell>

@@ -34,7 +34,7 @@ export default function SearchPlayerForm() {
             setErrorMessage("Please fill out all the fields");
             return;
         }
-        // // Proceed with form submission
+
         setErrorMessage(''); // Clear the error message if validation passes
         const response = await GetPUUIDFromAccountNameAndTag(gameName, tagline, region)
 

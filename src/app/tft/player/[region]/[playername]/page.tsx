@@ -6,7 +6,7 @@ import {StatCard} from "@/components/tft/player/stat-card"
 import {RefreshButton} from "@/components/tft/buttons"
 import {GetSummonerDataFromPUUIDRegion, GetPlayerMatchDataFromPUUIDRegion, GetBasicPlayerMatchDataFromPUUIDRegion} from "@/components/tft/django_api";
 import {Divider} from "@nextui-org/divider";
-import {Image} from "@nextui-org/image"
+import Image from 'next/image'
 import React from "react";
 import { CheckAccountNameAndTag } from "@/components/tft/riot_api";
 import {regions} from "@/app/tft/search/data";
@@ -43,7 +43,10 @@ function PlayerIcon(playerData: any) {
         return (
             <Image 
                 width={90}
+                height={90}
+                alt="Summoner Icon"
                 src={`/tft/profile-icons/${playerData.playerData.icon}.jpg`}
+                priority
             />
         )
     return null;
@@ -87,7 +90,10 @@ export default async function Home(params: any) {
         <div className="flex flex-col items-center justify-center">
             <Image 
                 width={200}
+                height={200}
+                alt="Error 404"
                 src={`/tft/404/dark-pengu-sword.png`}
+                priority
             />
             <Spacer y={3}/>
             <h1 className={title({color: "violet"})}>Error: Player not found</h1>

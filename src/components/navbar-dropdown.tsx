@@ -44,11 +44,11 @@ export function TFTDropDown() {
                         Search Player
                     </Link>
                 </DropdownItem>
-                <DropdownItem key="sim" textValue="Sim">
+                {/* <DropdownItem key="sim" textValue="Sim">
                     <Link href="/tft/sim" color="foreground">
                     Simulation
                     </Link>
-                </DropdownItem>
+                </DropdownItem> */}
                 <DropdownItem key="ml" textValue="Machine Learning">
                     <Link href="/tft/ml" color="foreground">
                         Machine Learning

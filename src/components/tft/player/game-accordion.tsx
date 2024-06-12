@@ -1,11 +1,9 @@
 'use client'
-
 import {Accordion, AccordionItem} from "@nextui-org/accordion";
 import {GameCard} from "@/components/tft/player/game-card";
 import React from "react";
 import {Image} from "@nextui-org/image";
 import {Divider} from "@nextui-org/divider";
-import {Spacer} from "@nextui-org/spacer";
 
 function ordinal_suffix_of(i: number) {
     let j = i % 10,
@@ -69,8 +67,6 @@ export function GameAccordion(gameData: any) {
                     </div>
                 }
             >
-                <Divider orientation='horizontal'/>
-                <Spacer y={1}/>
                 <GameCard match_id={gameData.gameData.match_id} puuid={gameData.gameData.puuid}/>
             </AccordionItem>
         </Accordion>

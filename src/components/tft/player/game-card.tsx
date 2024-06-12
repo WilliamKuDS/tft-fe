@@ -9,6 +9,8 @@ import {
 import {Image} from "@nextui-org/image"
 import {Tooltip} from "@nextui-org/tooltip"
 import {Spacer} from "@nextui-org/spacer";
+import { Divider } from "@nextui-org/divider";
+import { Spinner } from "@nextui-org/spinner";
 
 
 export function GameCard(data: any) {
@@ -28,12 +30,14 @@ export function GameCard(data: any) {
 
     if (!game) {
         return (
-            <></>
+            <Spinner label="Loading..." color="warning" />
         )
     }
     return (
         <Card isBlurred shadow="none">
             <CardBody>
+                <Divider orientation='horizontal'/>
+                <Spacer y={1}/>
                 <div style={{display: "flex", flexDirection: "row"}}>
                     <SummaryContainer matchInfo={game.match_info} summonerMatchInfo={game.summoner_match_data}/>
                     <div>
