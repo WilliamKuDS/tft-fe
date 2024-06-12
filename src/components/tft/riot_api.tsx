@@ -44,10 +44,10 @@ export async function CheckAccountNameAndTag(player_name: string, player_tag: st
             return (account_data.puuid)
         }
         else {
-            return ('failed')
+            return (null)
         }
     }
     else {
-        return ('failed')
+        return (null)
     }
 }

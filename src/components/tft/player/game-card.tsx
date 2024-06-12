@@ -17,7 +17,7 @@ export function GameCard(data: any) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await GetDetailedPlayerMatchDataFromPUUIDRegion(data.match_id);
+                const response = await GetDetailedPlayerMatchDataFromPUUIDRegion(data.match_id, data.puuid);
                 setGame(response);
             } catch (error) {
                 console.error(error);
@@ -33,37 +33,19 @@ export function GameCard(data: any) {
     }
     return (
         <Card isBlurred shadow="none">
-            {/*<CardHeader className="flex gap-3">*/}
-            {/*    <Image*/}
-            {/*        alt="playericon"*/}
-            {/*        height={40}*/}
-            {/*        radius="sm"*/}
-            {/*        src={game.icon}*/}
-            {/*        width={40}*/}
-            {/*    />*/}
-            {/*    <div className="flex flex-col">*/}
-            {/*        <p className="text-md">{pathList[4]}</p>*/}
-            {/*        <p className="text-small text-default-500">{game.date}</p>*/}
-            {/*    </div>*/}
-            {/*</CardHeader>*/}
-            {/*<Divider/>*/}
             <CardBody>
                 <div style={{display: "flex", flexDirection: "row"}}>
-                    <SummaryContainer matchInfo={game.match_info}/>
+                    <SummaryContainer matchInfo={game.match_info} summonerMatchInfo={game.summoner_match_data}/>
                     <div>
-                        {/* <TraitContainer data={game.game_trait_id}/> */}
+                        <TraitContainer data={game.summoner_match_data.traits}/>
                         <Spacer y={2}/>
-                        {/* <AugmentContainer data={game.augment_id}/> */}
+                        <AugmentContainer data={game.summoner_match_data.augments}/>
                     </div>
                 </div>
                 <Spacer y={5}/>
-
                 <Spacer y={10}/>
-                {/* <UnitContainer data={game.game_unit_id}/> */}
+                <UnitContainer data={game.summoner_match_data.units}/>
             </CardBody>
-            {/*<Divider/>*/}
-            {/*<CardFooter>*/}
-            {/*</CardFooter>*/}
         </Card>
     );
 }
@@ -71,9 +53,12 @@ export function GameCard(data: any) {
 function SummaryContainer(data: any) {
     return (
         <div style={{marginRight: 'auto'}}>
-            <p>Level: {data.level}</p>
-            <p>Round: {data.round}</p>
-            <p>Length: {data.length}</p>
+            <p>Level: {data.summonerMatchInfo.level}</p>
+            <p>Round: {data.summonerMatchInfo.last_round}</p>
+            <p>Time Eliminated: {Math.round(data.summonerMatchInfo.time_eliminated/60)}</p>
+            <p>Gold Left: {data.summonerMatchInfo.gold_left}</p>
+            <p>Players Eliminated: {data.summonerMatchInfo.players_eliminated}</p>
+            <p>Total Damage: {data.summonerMatchInfo.total_damage_to_players}</p>
         </div>
     )
 }
@@ -81,14 +66,14 @@ function SummaryContainer(data: any) {
 function TraitContainer(data: any) {
     return (
         <div style={{display: "flex", flexDirection: "row", marginLeft: 'auto'}}>
-            {data.data.map((trait: any[], index: number) => (
+            {data.data.map((trait: any, index: number) => (
                 <div key={index} style={{margin: "auto", marginRight: "10px"}}>
                     <div className="flex items-center space-x-1">
-                        <p>{trait[1]}</p>
-                        <Tooltip content={trait[0]}>
+                        <p>{trait.num_units}</p>
+                        <Tooltip content={trait.display_name}>
                             <Image
                                 alt={`Trait ${index}`}
-                                src={trait[2]}
+                                src={`/tft/traits/${trait.icon}.png`}
                                 width={12}
                                 height={12}
                             />
@@ -102,13 +87,13 @@ function TraitContainer(data: any) {
 
 function AugmentContainer(data: any) {
     return (
-        <div style={{display: "flex", flexDirection: "row"}}>
-            {data.data.map((augment: any[], index: number) => (
-                <div key={index} style={{margin: "auto", marginLeft: "auto"}}>
-                    <Tooltip content={augment[0]}>
+        <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", gap: "4px"}}>
+            {data.data.map((augment: any, index: number) => (
+                <div key={index}>
+                    <Tooltip content={augment.display_name}>
                         <Image
-                            alt={`Augment ${index}`}
-                            src={augment[1]}
+                            alt={`Augment ${augment.name}`}
+                            src={`/tft/augments/${augment.icon}.png`}
                             width={40}
                             height={40}
                         />
@@ -120,23 +105,42 @@ function AugmentContainer(data: any) {
 }
 
 function UnitContainer(data: any) {
+    const getBorderStyle = (cost: number) => {
+        switch (cost) {
+          case 1:
+            return { border: '1px solid gray' };
+          case 2:
+            return { border: '1px solid green' };
+          case 3:
+            return { border: '1px solid blue' };
+          case 4:
+            return { border: '1px solid purple' };
+          case 5:
+            return { border: '1px solid gold' };
+          default:
+            return {};
+        }
+    }
+
     return (
         <div style={{display: "flex", flexDirection: "row", flexWrap: "wrap"}}>
-            {data.data.map((unit: any[], index: number) => (
-                <div key={index} style={{margin: "auto", height: 45, width:45}}>
-                    <Tooltip content={unit[0]}>
-                        <Image
-                            alt={`Unit ${index}`}
-                            src={unit[3]}
-                            loading='lazy'
-                            // width={100}
-                            // height={100}
-                        />
-                    </Tooltip>
-                    <div style={{display: "flex", flexDirection: "row", height: 15, width: 45}}>
-                        <UnitItemContainer data={unit[2]}/>
+            {data.data.map((unit: any, index: number) => (
+                <div key={index} style={{margin: "auto", textAlign: "center"}} >
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                        <WhichStarIcon tier={unit.tier}/>
+                        <Tooltip content={unit.display_name}>
+                            <Image
+                                alt={`Unit ${unit.name}`}
+                                src={`/tft/champions/${unit.icon}.png`}
+                                loading='lazy'
+                                className="w-[50px] h-[50px] object-cover object-[85%_center] rounded-[10px]"
+                                style={getBorderStyle(unit.cost)}
+                            />
+                        </Tooltip>
+                        <div style={{display: "flex", flexDirection: "row", height: 15, width: 45}}>
+                            <UnitItemContainer data={unit.items}/>
+                        </div>
                     </div>
-                    {/*<p>{unit[0]}: {unit[1]}</p>*/}
                 </div>
             ))}
         </div>
@@ -150,12 +154,12 @@ function UnitItemContainer(data: any) {
         )
     } else {
         return (
-            data.data.map((item: any[], index: number) => (
+            data.data.map((item: any, index: number) => (
                 <div key={index} style={{margin: "auto"}}>
-                    <Tooltip content={item[0]}>
+                    <Tooltip content={item.display_name}>
                         <Image
-                            alt={`Item ${item[0]}`}
-                            src={item[1]}
+                            alt={`Item ${item.name}`}
+                            src={`/tft/items/${item.icon}`}
                             width={15}
                             height={15}
                         />
@@ -165,4 +169,39 @@ function UnitItemContainer(data: any) {
 
         )
     }
+}
+
+function WhichStarIcon(tier: any) {
+    switch (tier.tier) {
+        case 1:
+          return (<Image src="/tft/stars/1-bronze-star.svg" alt="Bronze Star" width={12} height={12} />)
+        case 2:
+          return (<Image src="/tft/stars/2-silver-stars.svg" alt="Bronze Star" width={24} height={12} />)
+        case 3:
+          return (<Image src="/tft/stars/3-gold-stars.svg" alt="Bronze Star" width={36} height={12} />)
+        case 4:
+          return (<Image src="/tft/stars/4-emerald-stars.svg" alt="Bronze Star" width={48} height={12} />)
+        default:
+          return (<Image></Image>);
+      }
+    // if (tier === 1) {
+    //     return (
+    //         <Image src="/tft/stars/1-bronze-star.svg" alt="Bronze Star" width={24} height={24} />
+    //     )
+    // }
+    // else if (tier === 2) {
+    //     return (
+    //         <Image src="/tft/stars/2-silver-stars.svg" alt="Bronze Star" width={24} height={24} />
+    //     )
+    // }
+    // else if (tier === 3) {
+    //     return (
+    //         <Image src="/tft/stars/3-gold-stars.svg" alt="Bronze Star" width={24} height={24} />
+    //     )
+    // }
+    // else if (tier === 4) {
+    //     return (
+    //         <Image src="/tft/stars/4-emerald-stars.svg" alt="Bronze Star" width={24} height={24} />
+    //     )
+    // }
 }

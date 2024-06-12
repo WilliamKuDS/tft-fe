@@ -10,6 +10,7 @@ import {Image} from "@nextui-org/image"
 import React from "react";
 import { CheckAccountNameAndTag } from "@/components/tft/riot_api";
 import {regions} from "@/app/tft/search/data";
+import SearchPlayerForm from "@/components/tft/search/form";
 
 function capitalizeFirstLetter(text: string) {
 if (!text) return text;
@@ -26,7 +27,7 @@ async function validateAndSplit(input: string, region: string): Promise<[ gameNa
         const [gameName, tagLine] = input.split('-');
 
         const puuid = await CheckAccountNameAndTag(gameName, tagLine)
-        if (puuid === 'failed') {
+        if (puuid === null) {
             return null;
         } 
         const isValidRegion = regions.some(reg => reg.value === region);
@@ -42,7 +43,7 @@ function PlayerIcon(playerData: any) {
         return (
             <Image 
                 width={90}
-                src={`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${playerData.playerData.icon}.jpg`}
+                src={`/tft/profile-icons/${playerData.playerData.icon}.jpg`}
             />
         )
     return null;
@@ -83,13 +84,18 @@ export default async function Home(params: any) {
     const accountData = await validateAndSplit(playerInfo.playername, playerInfo.region)
     if (accountData === null)
     return (
-        <div>
-            <h1 className={title({color: "violet"})}>Error 404: Player not found</h1>
+        <div className="flex flex-col items-center justify-center">
+            <Image 
+                width={200}
+                src={`/tft/404/dark-pengu-sword.png`}
+            />
+            <Spacer y={3}/>
+            <h1 className={title({color: "violet"})}>Error: Player not found</h1>
+            <SearchPlayerForm/>
         </div>
     )
 
     const playerData = await GetSummonerDataFromPUUIDRegion(accountData[3], accountData[2])
-    const basicPlayerMatchData = await GetBasicPlayerMatchDataFromPUUIDRegion(accountData[3], accountData[2])
 
     return (
     <div>
@@ -104,15 +110,14 @@ export default async function Home(params: any) {
         <Spacer y={5}/>
         <div>
             <RefreshButton params={accountData}/>
-            <Spacer y={1}/>
+            <Spacer y={3}/>
             <LastUpdatedText lastUpdate={playerData.last_updated}/>
-            <Spacer y={2}/>
+            <Spacer y={5}/>
             <PlayerStatCard playerData={playerData}/>
         </div>
-        <Spacer y={5}/>
         <Divider orientation='horizontal'/>
         <Spacer y={5}/>
-        <GameTable params={basicPlayerMatchData}/>
+        <GameTable puuid={accountData[3]} region={accountData[2]}/>
     </div>
     );
 }

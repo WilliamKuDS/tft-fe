@@ -3,7 +3,7 @@
 import {Accordion, AccordionItem} from "@nextui-org/accordion";
 import {GameCard} from "@/components/tft/player/game-card";
 import React from "react";
-import {Avatar} from "@nextui-org/avatar";
+import {Image} from "@nextui-org/image";
 import {Divider} from "@nextui-org/divider";
 import {Spacer} from "@nextui-org/spacer";
 
@@ -40,7 +40,10 @@ export function GameAccordion(gameData: any) {
                         </div>
                         <Divider orientation='vertical'/>
                         <div>
-                            <Avatar src={gameData.gameData.icon}/>
+                            <Image 
+                            src={`/tft/companion/${gameData.gameData.companion_icon}`}
+                            className="rounded-full w-12 h-12 object-cover" 
+                            />
                         </div>
                     </div>
                 }
@@ -50,7 +53,8 @@ export function GameAccordion(gameData: any) {
                             {gameData.gameData.queue}
                         </div>
                         <div style={{marginLeft: "auto"}}>
-                            Lobby Rank: {gameData.gameData.lobby_rank}
+                            {/* Lobby Rank: {gameData.gameData.lobby_rank} */}
+                            {gameData.gameData.game_creation}
                         </div>
                     </div>
                 }
@@ -67,7 +71,7 @@ export function GameAccordion(gameData: any) {
             >
                 <Divider orientation='horizontal'/>
                 <Spacer y={1}/>
-                <GameCard match_id={gameData.gameData.match_id}/>
+                <GameCard match_id={gameData.gameData.match_id} puuid={gameData.gameData.puuid}/>
             </AccordionItem>
         </Accordion>
     )

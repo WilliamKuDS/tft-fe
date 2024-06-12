@@ -61,33 +61,36 @@ export async function GetPlayerMatchDataFromPUUIDRegion(puuid: string, region: s
 
 }
 
-export async function GetBasicPlayerMatchDataFromPUUIDRegion(puuid: string, region: string) {
-    const response = await fetch("http://127.0.0.1:8000/tft/match/basic", {
-        method: "GET", // *GET, POST, PUT, DELETE, etc.
-        mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
+export async function GetBasicPlayerMatchDataFromPUUIDRegion(puuid: string, region: string, page: any) {
+    const response = await fetch(`http://127.0.0.1:8000/tft/match/basic`, {
+        method: "GET",
+        mode: "cors",
         headers: {
             "puuid": puuid,
-            "region": region
+            "region": region,
+            "page": page
         },
     });
 
     if (response.ok) {
-        const data = await response.json()
-        return data
+        const data = await response.json();
+        if (Object.keys(data).length === 0) {
+            return null;
+        }
+        return data;
+    } else {
+        return null;
     }
-    else {
-        const data = {}
-        return data
-    }
-
 }
+  
 
-export async function GetDetailedPlayerMatchDataFromPUUIDRegion(match_id: string) {
+export async function GetDetailedPlayerMatchDataFromPUUIDRegion(match_id: string, puuid: string) {
     const response = await fetch("http://127.0.0.1:8000/tft/match/detailed", {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
         headers: {
-            "matchID": match_id
+            "matchID": match_id,
+            "puuid": puuid
         },
     });
 

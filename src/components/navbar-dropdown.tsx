@@ -39,15 +39,21 @@ export function TFTDropDown() {
                               setIsOpen(false);
                           }}
             >
-                <DropdownItem key="search"><Link href="/tft/search" color="foreground">Search
-                    Player
-                </Link></DropdownItem>
-                <DropdownItem key="sim"><Link href="/tft/sim" color="foreground">
+                <DropdownItem key="search" textValue="Search Player">
+                    <Link href="/tft/search" color="foreground">
+                        Search Player
+                    </Link>
+                </DropdownItem>
+                <DropdownItem key="sim" textValue="Sim">
+                    <Link href="/tft/sim" color="foreground">
                     Simulation
-                </Link></DropdownItem>
-                <DropdownItem key="ml"><Link href="/tft/ml" color="foreground">Machine
-                    Learning
-                </Link></DropdownItem>
+                    </Link>
+                </DropdownItem>
+                <DropdownItem key="ml" textValue="Machine Learning">
+                    <Link href="/tft/ml" color="foreground">
+                        Machine Learning
+                    </Link>
+                </DropdownItem>
             </DropdownMenu>
         </Dropdown>
     )
