@@ -44,5 +44,35 @@ export function RefreshButton(params: any) {
         </Button>
     );
 };
+
+
+interface OpenAIButtonProps {
+    onClick: () => void;
+}
+
+export function AnalyzeButton({ onClick }: OpenAIButtonProps) {
+    return (
+        <Button type="submit" color="danger" onClick={onClick}>
+            Game Performance Analysis
+        </Button>
+    );
+}
+
+export function RecommendationButton({ onClick }: OpenAIButtonProps) {
+    return (
+        <Button type="submit" color="danger" onClick={onClick}>
+            Strategy Recommendation
+        </Button>
+    );
+}
+
+export function MetaButton({ onClick }: OpenAIButtonProps) {
+    return (
+        <Button type="submit" color="danger" onClick={onClick}>
+            Meta Analysis
+        </Button>
+    );
+}
+
       
 

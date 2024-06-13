@@ -3,7 +3,7 @@ import {title, subtitle} from "@/components/primitives";
 import {Spacer} from "@nextui-org/spacer";
 import {GameTable} from "@/components/tft/player/game-table";
 import {StatCard} from "@/components/tft/player/stat-card"
-import {RefreshButton} from "@/components/tft/buttons"
+import {AnalyzeButton, RefreshButton} from "@/components/tft/buttons"
 import {GetSummonerDataFromPUUIDRegion, GetPlayerMatchDataFromPUUIDRegion, GetBasicPlayerMatchDataFromPUUIDRegion} from "@/components/tft/django_api";
 import {Divider} from "@nextui-org/divider";
 import Image from 'next/image'
@@ -11,6 +11,9 @@ import React from "react";
 import { CheckAccountNameAndTag } from "@/components/tft/riot_api";
 import {regions} from "@/app/tft/search/data";
 import SearchPlayerForm from "@/components/tft/search/form";
+import PerformanceAnalysis from "@/components/tft/player/game-performance-analysis";
+import StrategyRecommendation from "@/components/tft/player/game-strategy-recommendations";
+import MetaAnalysis from "@/components/tft/player/game-meta-analysis";
 
 function capitalizeFirstLetter(text: string) {
 if (!text) return text;
@@ -121,6 +124,16 @@ export default async function Home(params: any) {
             <Spacer y={5}/>
             <PlayerStatCard playerData={playerData}/>
         </div>
+        <Divider orientation='horizontal'/>
+        <Spacer y={5}/>
+        <div style={{display: 'flex', flexDirection: 'row', margin: 'auto'}}>
+            <p>COOL AI STUFF</p>
+            <PerformanceAnalysis puuid={accountData[3]}/>
+            <StrategyRecommendation/>
+            <MetaAnalysis/>
+            <p>COOL AI STUFF</p>
+        </div>
+        <Spacer y={5}/>
         <Divider orientation='horizontal'/>
         <Spacer y={5}/>
         <GameTable puuid={accountData[3]} region={accountData[2]}/>
