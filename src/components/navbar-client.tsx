@@ -11,55 +11,40 @@ import { Spacer } from "@nextui-org/spacer";
 
 
 export function TFTDropDown() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [timeoutId, setTimeoutId] = useState<any>(null);
-    const delay = 100;
+    const [isHovered, setIsHovered] = useState(false);
     return (
-        <Dropdown isOpen={isOpen}>
-            <NavbarItem key='tft'>
-                <DropdownTrigger>
-                    <Button variant="light" disableRipple size="sm" radius="none"
-                            className="p-0 bg-transparent data-[hover=true]:bg-transparent"
-                            style={{fontSize: 15}}
-                            onMouseEnter={() => {
-                                clearTimeout(timeoutId);
-                                setIsOpen(true);
-                            }}
-                            onMouseLeave={() => {
-                                const id = setTimeout(() => setIsOpen(false), delay);
-                                setTimeoutId(id);
-                            }}
-                    >
-                        TFT
-                    </Button>
-                </DropdownTrigger>
-            </NavbarItem>
-            <DropdownMenu aria-label="TFT Projects"
-                          onMouseEnter={() => {
-                              clearTimeout(timeoutId);
-                              setIsOpen(true);
-                          }}
-                          onMouseLeave={() => {
-                              setIsOpen(false);
-                          }}
+        <NavbarItem key='tft'>
+            <div
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                style={{ position: 'relative', display: 'inline-block' }}
             >
-                <DropdownItem key="search" textValue="Search Player">
-                    <Link href="/tft/search" color="foreground">
-                        Search Player
-                    </Link>
-                </DropdownItem>
-                <DropdownItem key="database" textValue="Database">
-                    <Link href="/tft/database" color="foreground">
-                        Database
-                    </Link>
-                </DropdownItem>
-                <DropdownItem key="ml" textValue="Machine Learning">
-                    <Link href="/tft/ml" color="foreground">
-                        Machine Learning
-                    </Link>
-                </DropdownItem>
-            </DropdownMenu>
-        </Dropdown>
+                <Dropdown isOpen={isHovered} onClose={() => setIsHovered(false)}>
+                    <DropdownTrigger>
+                        <Button data-hover={isHovered ? 'true' : 'false'} variant="light" disableRipple>
+                            TFT
+                        </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu aria-label="TFT Projects">
+                        <DropdownItem key="search" textValue="Search Player">
+                            <Link href="/tft/search" color="foreground">
+                                Search Player
+                            </Link>
+                        </DropdownItem>
+                        <DropdownItem key="database" textValue="Database">
+                            <Link href="/tft/database" color="foreground">
+                                Database
+                            </Link>
+                        </DropdownItem>
+                        <DropdownItem key="ml" textValue="Machine Learning">
+                            <Link href="/tft/ml" color="foreground">
+                                Machine Learning
+                            </Link>
+                        </DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
+            </div>
+        </NavbarItem>
     )
 }
 
@@ -208,10 +193,10 @@ function SignedOut() {
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
                 <DropdownItem key="login" href="/login">
-                    Login
+                    Sign in
                 </DropdownItem>
                 <DropdownItem key="signup" href="/signup">
-                    Signup
+                    Sign up
                 </DropdownItem>
             </DropdownMenu>
       </Dropdown>

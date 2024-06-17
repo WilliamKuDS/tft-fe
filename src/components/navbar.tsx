@@ -19,7 +19,6 @@ import {
     DiscordIcon,
     Logo,
   } from "@/components/icons";
-import { Divider } from "@nextui-org/divider";
 import { createClient } from "./supabase/server";
   
   export const Navbar = async () => {  

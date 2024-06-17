@@ -9,16 +9,16 @@ export default async function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <div className="flex flex-col items-center">
-        <h1 className={title()}>Simulate a Board in</h1>
+        <h1 className={title()}>Predict placement for</h1>
         <h1 className={title({color: "violet"})}>Teamfight Tactics</h1>
         <Spacer y={10} />
-        <h1 className={title({color: "cyan"})}>Win Rate: </h1>
+        <h1 className={title({color: "cyan"})}>Predicted Placement: </h1>
       </div>
       <Spacer y={10} />
       <div className="flex flex-row items-center" >
-          <UnitList/>
+          {/* <UnitList/> */}
           <HexGrid rows={4} cols={7} size={80} />
-          <ItemList/>
+          {/* <ItemList/> */}
       </div>
     </div>
   );
