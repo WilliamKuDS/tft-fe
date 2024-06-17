@@ -1,3 +1,4 @@
+'use server'
 import {
     Navbar as NextUINavbar,
     NavbarContent,
@@ -7,48 +8,26 @@ import {
     NavbarItem,
     NavbarMenuItem,
   } from "@nextui-org/navbar";
-  import { Button } from "@nextui-org/button";
-  import { Kbd } from "@nextui-org/kbd";
   import { Link } from "@nextui-org/link";
-  import { Input } from "@nextui-org/input";
-  import { link as linkStyles } from "@nextui-org/theme";
   import NextLink from "next/link";
-  import clsx from "clsx";
   
   import { siteConfig } from "@/config/site";
-  import {TFTDropDown} from "@/components/navbar-dropdown";
+  import { TFTDropDown, NavbarAvatarDropdown } from "@/components/navbar-client";
   import { ThemeSwitch } from "@/components/theme-switch";
   import {
-    TwitterIcon,
     GithubIcon,
     DiscordIcon,
-    HeartFilledIcon,
-    SearchIcon,
     Logo,
   } from "@/components/icons";
+import { Divider } from "@nextui-org/divider";
+import { createClient } from "./supabase/server";
   
-  export const Navbar = () => {
-    const searchInput = (
-      <Input
-        aria-label="Search"
-        classNames={{
-          inputWrapper: "bg-default-100",
-          input: "text-sm",
-        }}
-        endContent={
-          <Kbd className="hidden lg:inline-block" keys={["command"]}>
-            K
-          </Kbd>
-        }
-        labelPlacement="outside"
-        placeholder="Search..."
-        startContent={
-          <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-        }
-        type="search"
-      />
-    );
-  
+  export const Navbar = async () => {  
+    const supabase = createClient()
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
     return (
       <NextUINavbar maxWidth="xl" position="sticky">
         <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -77,8 +56,8 @@ import {
             </Link>
             <ThemeSwitch />
           </NavbarItem>
-          <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
-          <NavbarItem className="hidden md:flex">
+          <NavbarItem className="hidden sm:flex gap-2">
+            <NavbarAvatarDropdown user={user}/>
           </NavbarItem>
         </NavbarContent>
   
