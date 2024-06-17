@@ -3,17 +3,16 @@ import {title, subtitle} from "@/components/primitives";
 import {Spacer} from "@nextui-org/spacer";
 import {GameTable} from "@/components/tft/player/game-table";
 import {StatCard} from "@/components/tft/player/stat-card"
-import {AnalyzeButton, RefreshButton} from "@/components/tft/buttons"
-import {GetSummonerDataFromPUUIDRegion, GetPlayerMatchDataFromPUUIDRegion, GetBasicPlayerMatchDataFromPUUIDRegion} from "@/components/tft/django_api";
+import {RefreshButton} from "@/components/tft/buttons"
+import {GetSummonerDataFromPUUIDRegion} from "@/components/tft/django_api";
 import {Divider} from "@nextui-org/divider";
 import Image from 'next/image'
 import React from "react";
 import { CheckAccountNameAndTag } from "@/components/tft/riot_api";
 import {regions} from "@/app/tft/search/data";
 import SearchPlayerForm from "@/components/tft/search/form";
-import PerformanceAnalysis from "@/components/tft/player/game-performance-analysis";
-import StrategyRecommendation from "@/components/tft/player/game-strategy-recommendations";
-import MetaAnalysis from "@/components/tft/player/game-meta-analysis";
+import { AISection, DisabledAISection } from "@/components/tft/player/game-ai";
+import { createClient } from '@/components/supabase/server'
 
 function capitalizeFirstLetter(text: string) {
 if (!text) return text;
@@ -88,6 +87,16 @@ function PlayerStatCard(playerData: any) {
 export default async function Home(params: any) {
     const playerInfo = params.params
     const accountData = await validateAndSplit(playerInfo.playername, playerInfo.region)
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    const { data, error, status } = await supabase
+        .from('profiles')
+        .select(`account_tier`)
+        .eq('id', user?.id)
+        .single()
+
+    console.log(data)
+
     if (accountData === null)
     return (
         <div className="flex flex-col items-center justify-center">
@@ -126,12 +135,7 @@ export default async function Home(params: any) {
         </div>
         <Divider orientation='horizontal'/>
         <Spacer y={5}/>
-        <div style={{display: 'flex', flexDirection: 'row', margin: 'auto', justifyContent: 'space-between'}}>
-            <p>*AI*</p>
-            <PerformanceAnalysis puuid={accountData[3]}/>
-            <StrategyRecommendation puuid={accountData[3]}/>
-            <p>*AI*</p>
-        </div>
+        {data?.account_tier === 0 || data === null ? <DisabledAISection /> : <AISection puuid={accountData[3]}/>}
         <Spacer y={5}/>
         <Divider orientation='horizontal'/>
         <Spacer y={5}/>
