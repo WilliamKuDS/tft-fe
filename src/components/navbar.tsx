@@ -27,6 +27,7 @@ import { createClient } from "./supabase/server";
     const {
       data: { user },
     } = await supabase.auth.getUser()
+
     return (
       <NextUINavbar maxWidth="xl" position="sticky">
         <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -39,6 +40,7 @@ import { createClient } from "./supabase/server";
           <ul className="hidden lg:flex gap-4 justify-start ml-2">
             <Link color="foreground" href="/"> Home </Link>
             <TFTDropDown/>
+            <Link color="foreground" href="/homelab"> Homelab </Link>
           </ul>
         </NavbarContent>
   

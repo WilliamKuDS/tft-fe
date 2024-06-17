@@ -147,7 +147,7 @@ function SignedIn({avatar_img, fullname, username}: {
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
                 <DropdownSection showDivider>
-                    <DropdownItem key="id" isReadOnly>
+                    <DropdownItem key="id" isReadOnly textValue="Avatar">
                     <div style={{display: 'flex', flexDirection: 'row'}}>
                         <Avatar
                             src={avatar_img}
@@ -194,10 +194,10 @@ function SignedOut() {
                 />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
-                <DropdownItem key="login" href="/login">
+                <DropdownItem key="login" textValue="Signin" href="/login">
                     Sign in
                 </DropdownItem>
-                <DropdownItem key="signup" href="/signup">
+                <DropdownItem key="signup" textValue="Signup" href="/signup">
                     Sign up
                 </DropdownItem>
             </DropdownMenu>

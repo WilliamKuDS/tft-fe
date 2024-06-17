@@ -41,7 +41,7 @@ export default function RegisterPage() {
               <Spacer y={3}/>
               <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                 <p style={{ marginRight: '5px' }}>Have an account?</p>
-                <Link href='/login' underline="hover">Login</Link>
+                <Link href='/login' underline="hover">Sign in</Link>
               </div>
               <Spacer y={5}/>
               <Button formAction={signup} type="submit" value="signup">Sign up</Button>
