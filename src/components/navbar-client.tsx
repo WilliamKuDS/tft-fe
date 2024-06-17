@@ -62,7 +62,7 @@ export function NavbarAvatarDropdown({ user }: { user: User | null }) {
     
           const { data, error, status } = await supabase
             .from('profiles')
-            .select(`full_name, username, website, avatar_url`)
+            .select(`full_name, username, avatar_url`)
             .eq('id', user?.id)
             .single()
     
@@ -142,6 +142,7 @@ function SignedIn({avatar_img, fullname, username}: {
                     alt="Avatar"
                     className="avatar"
                     size="sm"
+                    as="button"
                 />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
@@ -189,6 +190,7 @@ function SignedOut() {
                 alt="Avatar"
                 className="avatar"
                 size="sm"
+                as="button"
                 />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
