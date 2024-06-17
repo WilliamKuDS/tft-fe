@@ -126,12 +126,11 @@ export default async function Home(params: any) {
         </div>
         <Divider orientation='horizontal'/>
         <Spacer y={5}/>
-        <div style={{display: 'flex', flexDirection: 'row', margin: 'auto'}}>
-            <p>COOL AI STUFF</p>
+        <div style={{display: 'flex', flexDirection: 'row', margin: 'auto', justifyContent: 'space-between'}}>
+            <p>*AI*</p>
             <PerformanceAnalysis puuid={accountData[3]}/>
-            <StrategyRecommendation/>
-            <MetaAnalysis/>
-            <p>COOL AI STUFF</p>
+            <StrategyRecommendation puuid={accountData[3]}/>
+            <p>*AI*</p>
         </div>
         <Spacer y={5}/>
         <Divider orientation='horizontal'/>

@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react';
-import { AnalyzeMatches } from '@/components/tft/django_api';
+import { MatchRecommendations } from '@/components/tft/django_api';
 import { RecommendationButton } from '@/components/tft/buttons';
 import {
     Modal, 
@@ -17,9 +17,9 @@ export default function StrategyRecommendation(puuid: any) {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const [gotAnalysis, setGotAnalysis] = useState(false)
 
-    const analyzePerformance = async () => {
+    const nextMatchRecommendations = async () => {
         if (gotAnalysis === false) {
-            const result = await AnalyzeMatches(puuid.puuid);
+            const result = await MatchRecommendations(puuid.puuid);
             setAnalysis(result.analysis);
             setGotAnalysis(true);
         }
@@ -28,14 +28,14 @@ export default function StrategyRecommendation(puuid: any) {
 
     return (
         <div>
-            <RecommendationButton onClick={onOpen} />
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+            <RecommendationButton onClick={nextMatchRecommendations} />
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange} size='5xl' scrollBehavior='inside' backdrop='opaque'>
                 <ModalContent>
                 {(onClose) => (
                     <>
-                    <ModalHeader className="flex flex-col gap-1">Strategy Recommendation</ModalHeader>
+                    <ModalHeader className="flex flex-col gap-1">Next Match Recommendations</ModalHeader>
                     <ModalBody>
-                        WIP
+                        {analysis}
                     </ModalBody>
                     <ModalFooter>
                         <Button color="danger" variant="light" onPress={onClose}>

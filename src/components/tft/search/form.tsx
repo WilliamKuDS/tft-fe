@@ -64,7 +64,7 @@ export default function SearchPlayerForm() {
                     />
                     <Input
                         label="Player Tag"
-                        //placeholder="NA1"
+                        //placeholder="NA1" 
                         value={tagline}
                         onChange={(e) => setTagline(e.target.value)}
                         isInvalid={isTaglineInvalid}

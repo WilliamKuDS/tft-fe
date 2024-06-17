@@ -53,7 +53,7 @@ interface OpenAIButtonProps {
 export function AnalyzeButton({ onClick }: OpenAIButtonProps) {
     return (
         <Button type="submit" color="danger" onClick={onClick}>
-            Game Performance Analysis
+            Overall Analysis
         </Button>
     );
 }
@@ -61,7 +61,7 @@ export function AnalyzeButton({ onClick }: OpenAIButtonProps) {
 export function RecommendationButton({ onClick }: OpenAIButtonProps) {
     return (
         <Button type="submit" color="danger" onClick={onClick}>
-            Strategy Recommendation
+            Recommendations
         </Button>
     );
 }
