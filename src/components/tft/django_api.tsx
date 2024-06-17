@@ -134,7 +134,7 @@ export async function UpdateMatchData(puuid: string) {
 
 }
 
-export async function AnalyzeMatches(puuid: string) {
+export async function AnalyzeMatches({puuid} : {puuid: string}) {
     const response = await fetch(`http://127.0.0.1:8000/tft/summoner/analyze`, {
         method: "GET",
         mode: "cors",
@@ -149,7 +149,7 @@ export async function AnalyzeMatches(puuid: string) {
     }
 }
 
-export async function MatchRecommendations(puuid: string) {
+export async function MatchRecommendations({puuid} : {puuid: string}) {
     const response = await fetch(`http://127.0.0.1:8000/tft/summoner/recommendations`, {
         method: "GET",
         mode: "cors",

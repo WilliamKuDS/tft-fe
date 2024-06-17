@@ -4,6 +4,7 @@ import {Button} from "@nextui-org/button";
 import { useState } from 'react';
 import { UpdatePlayerProfileData } from "./django_api";
 import { useRouter } from 'next/navigation'
+import { Link } from "@nextui-org/link";
 
 export function SearchButton() {
     return (
@@ -47,32 +48,56 @@ export function RefreshButton(params: any) {
 
 
 interface OpenAIButtonProps {
-    onClick: () => void;
+    onPress: () => void;
 }
 
-export function AnalyzeButton({ onClick }: OpenAIButtonProps) {
+export function AnalyzeButton({ onPress, loading }: { onPress: () => void, loading: boolean }) {
     return (
-        <Button type="submit" color="danger" onClick={onClick}>
+        <Button type="submit" color="danger" onPress={onPress} isLoading={loading} disabled={loading}>
+            Overall Analysis
+        </Button>
+    );
+}
+export function DisabledAnalyzeButton() {
+    return (
+        <Button type="submit" color="danger" isDisabled>
             Overall Analysis
         </Button>
     );
 }
 
-export function RecommendationButton({ onClick }: OpenAIButtonProps) {
+export function RecommendationButton({ onPress, loading }: { onPress: () => void, loading: boolean }) {
     return (
-        <Button type="submit" color="danger" onClick={onClick}>
+        <Button type="submit" color="danger" onPress={onPress} isLoading={loading} disabled={loading}>
             Recommendations
         </Button>
     );
 }
 
-export function MetaButton({ onClick }: OpenAIButtonProps) {
+export function DisabledRecommendationButton() {
     return (
-        <Button type="submit" color="danger" onClick={onClick}>
+        <Button type="submit" color="danger" isDisabled>
+            Recommendations
+        </Button>
+    );
+}
+
+export function MetaButton({ onPress }: OpenAIButtonProps) {
+    return (
+        <Button type="submit" color="danger" onPress={onPress}>
             Meta Analysis
         </Button>
     );
 }
 
+export function HomeButton() {
+    return (
+        <Link href="/">
+            <Button color="default" variant="flat">
+                Return Home
+            </Button>
+        </Link>
+    )
+}
       
 
