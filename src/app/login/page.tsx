@@ -37,7 +37,7 @@ export default function LoginPage() {
                 />
             <Spacer y={3}/>
             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                <p style={{ marginRight: '5px' }}>Don't have an account?</p>
+                <p style={{ marginRight: '5px' }}>Don&apos;t have an account?</p>
                 <Link href='/signup' underline="hover">Sign up</Link>
               </div>
             <Spacer y={5}/>

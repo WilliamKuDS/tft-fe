@@ -5,6 +5,23 @@ import React from "react";
 import {Image} from "@nextui-org/image";
 import {Divider} from "@nextui-org/divider";
 
+type GameData = {
+    companion_icon: string;
+    game_creation: string;
+    lobby_rank: number | null;
+    match_id: string;
+    patch: string;
+    placement: number;
+    puuid: string;
+    queue: string;
+    date: string;
+}
+
+interface GameAccordionProps {
+    gameData: GameData;
+}
+
+
 function ordinal_suffix_of(i: number) {
     let j = i % 10,
         k = i % 100;
@@ -20,7 +37,7 @@ function ordinal_suffix_of(i: number) {
     return "th";
 }
 
-export function GameAccordion(gameData: any) {
+export function GameAccordion({gameData}: GameAccordionProps) {
     return (
         <Accordion>
             <AccordionItem
@@ -29,8 +46,8 @@ export function GameAccordion(gameData: any) {
                     <div className="flex h-10 items-center space-x-4">
                         <div>
                             <p className="text-xl text-gray-900 dark:text-white">
-                                {gameData.gameData.placement}
-                                {ordinal_suffix_of(gameData.gameData.placement)}
+                                {gameData.placement}
+                                {ordinal_suffix_of(gameData.placement)}
                             </p>
                             <p>
                                 place
@@ -39,7 +56,8 @@ export function GameAccordion(gameData: any) {
                         <Divider orientation='vertical'/>
                         <div>
                             <Image 
-                            src={`/tft/companion/${gameData.gameData.companion_icon}`}
+                            src={`/tft/companion/${gameData.companion_icon}`}
+                            alt="CompanionIcon"
                             className="rounded-full w-12 h-12 object-cover" 
                             />
                         </div>
@@ -48,26 +66,26 @@ export function GameAccordion(gameData: any) {
                 title={
                     <div className="flex">
                         <div style={{marginRight: "auto"}}>
-                            {gameData.gameData.queue}
+                            {gameData.queue}
                         </div>
                         <div style={{marginLeft: "auto"}}>
                             {/* Lobby Rank: {gameData.gameData.lobby_rank} */}
-                            {gameData.gameData.game_creation}
+                            {gameData.game_creation}
                         </div>
                     </div>
                 }
                 subtitle={
                     <div className="flex">
                         <div style={{marginRight: "auto"}}>
-                            {gameData.gameData.date}
+                            {gameData.date}
                         </div>
                         <div style={{marginLeft: "auto"}}>
-                            Patch: {gameData.gameData.patch}
+                            Patch: {gameData.patch}
                         </div>
                     </div>
                 }
             >
-                <GameCard match_id={gameData.gameData.match_id} puuid={gameData.gameData.puuid}/>
+                <GameCard match_id={gameData.match_id} puuid={gameData.puuid}/>
             </AccordionItem>
         </Accordion>
     )

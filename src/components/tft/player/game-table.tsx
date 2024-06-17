@@ -20,7 +20,6 @@ export function GameTable({ puuid, region }: { puuid: string, region: string }) 
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false); 
     const [hasMoreData, setHasMoreData] = useState(true);
-    const fetchedMatchIds = new Set<string>();
     const [showEmptyContent, setShowEmptyContent] = useState(false);
 
     useEffect(() => {
@@ -28,6 +27,7 @@ export function GameTable({ puuid, region }: { puuid: string, region: string }) 
           if (!hasMoreData) return;
 
           setLoading(true);
+          const fetchedMatchIds = new Set<string>();
           try {
             const fetchedData = await GetBasicPlayerMatchDataFromPUUIDRegion(puuid, region, page);
             if (fetchedData === null || fetchedData.length === 0) {
@@ -47,7 +47,7 @@ export function GameTable({ puuid, region }: { puuid: string, region: string }) 
         };
     
         fetchItems();
-      }, [page, puuid, region]);
+      }, [page, puuid, region, hasMoreData]);
 
     useEffect(() => {
         if (loading) {

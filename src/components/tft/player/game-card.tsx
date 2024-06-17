@@ -13,20 +13,20 @@ import { Divider } from "@nextui-org/divider";
 import { Spinner } from "@nextui-org/spinner";
 
 
-export function GameCard(data: any) {
+export function GameCard({match_id, puuid}: {match_id: string, puuid: string}) {
     const [game, setGame] = React.useState<any>();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await GetDetailedPlayerMatchDataFromPUUIDRegion(data.match_id, data.puuid);
+                const response = await GetDetailedPlayerMatchDataFromPUUIDRegion(match_id, puuid);
                 setGame(response);
             } catch (error) {
                 console.error(error);
             }
         };
         fetchData();
-    }, [data.player_id, data.game_id]);
+    }, [match_id, puuid]);
 
     if (!game) {
         return (
@@ -178,34 +178,14 @@ function UnitItemContainer(data: any) {
 function WhichStarIcon(tier: any) {
     switch (tier.tier) {
         case 1:
-          return (<Image src="/tft/stars/1-bronze-star.svg" alt="Bronze Star" width={12} height={12} />)
+          return (<Image src="/tft/stars/1-bronze-star.svg" alt="1-Star" width={12} height={12} />)
         case 2:
-          return (<Image src="/tft/stars/2-silver-stars.svg" alt="Bronze Star" width={24} height={12} />)
+          return (<Image src="/tft/stars/2-silver-stars.svg" alt="2-Star" width={24} height={12} />)
         case 3:
-          return (<Image src="/tft/stars/3-gold-stars.svg" alt="Bronze Star" width={36} height={12} />)
+          return (<Image src="/tft/stars/3-gold-stars.svg" alt="3-Star" width={36} height={12} />)
         case 4:
-          return (<Image src="/tft/stars/4-emerald-stars.svg" alt="Bronze Star" width={48} height={12} />)
+          return (<Image src="/tft/stars/4-emerald-stars.svg" alt="4-Star" width={48} height={12} />)
         default:
-          return (<Image></Image>);
+          return (<Image alt="0-Star"></Image>);
       }
-    // if (tier === 1) {
-    //     return (
-    //         <Image src="/tft/stars/1-bronze-star.svg" alt="Bronze Star" width={24} height={24} />
-    //     )
-    // }
-    // else if (tier === 2) {
-    //     return (
-    //         <Image src="/tft/stars/2-silver-stars.svg" alt="Bronze Star" width={24} height={24} />
-    //     )
-    // }
-    // else if (tier === 3) {
-    //     return (
-    //         <Image src="/tft/stars/3-gold-stars.svg" alt="Bronze Star" width={24} height={24} />
-    //     )
-    // }
-    // else if (tier === 4) {
-    //     return (
-    //         <Image src="/tft/stars/4-emerald-stars.svg" alt="Bronze Star" width={24} height={24} />
-    //     )
-    // }
 }
