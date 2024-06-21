@@ -1,9 +1,12 @@
 'use server'
 import { AccountData } from './types';
 
+const django_address = process.env.DJANGO_ADDRESS;
+const django_port = process.env.DJANGO_PORT;
+
 
 export async function FindAccount(account_data: AccountData) {
-    const response = await fetch("http://127.0.0.1:8000/tft/account", {
+    const response = await fetch(`http://${django_address}:${django_port}/tft/account`, {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
         headers: {
@@ -19,7 +22,7 @@ export async function FindAccount(account_data: AccountData) {
 }
 
 export async function GetSummonerDataFromPUUIDRegion(puuid: string, region: string) {
-    const response = await fetch("http://127.0.0.1:8000/tft/summoner", {
+    const response = await fetch(`http://${django_address}:${django_port}/tft/summoner`, {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
         headers: {
@@ -40,7 +43,7 @@ export async function GetSummonerDataFromPUUIDRegion(puuid: string, region: stri
 }
 
 export async function GetPlayerMatchDataFromPUUIDRegion(puuid: string, region: string) {
-    const response = await fetch("http://127.0.0.1:8000/tft/match", {
+    const response = await fetch(`http://${django_address}:${django_port}/tft/match`, {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
         headers: {
@@ -61,7 +64,7 @@ export async function GetPlayerMatchDataFromPUUIDRegion(puuid: string, region: s
 }
 
 export async function GetBasicPlayerMatchDataFromPUUIDRegion(puuid: string, region: string, page: any) {
-    const response = await fetch(`http://127.0.0.1:8000/tft/match/basic`, {
+    const response = await fetch(`http://${django_address}:${django_port}/tft/match/basic`, {
         method: "GET",
         mode: "cors",
         headers: {
@@ -84,7 +87,7 @@ export async function GetBasicPlayerMatchDataFromPUUIDRegion(puuid: string, regi
   
 
 export async function GetDetailedPlayerMatchDataFromPUUIDRegion(match_id: string, puuid: string) {
-    const response = await fetch("http://127.0.0.1:8000/tft/match/detailed", {
+    const response = await fetch(`http://${django_address}:${django_port}/tft/match/detailed`, {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
         headers: {
@@ -105,7 +108,7 @@ export async function GetDetailedPlayerMatchDataFromPUUIDRegion(match_id: string
 }
 
 export async function UpdatePlayerProfileData(puuid: string, region: string) {
-    const response = await fetch("http://127.0.0.1:8000/tft/profile", {
+    const response = await fetch(`http://${django_address}:${django_port}/tft/profile`, {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
         headers: {
@@ -120,7 +123,7 @@ export async function UpdatePlayerProfileData(puuid: string, region: string) {
 }
 
 export async function UpdateMatchData(puuid: string) {
-    const response = await fetch("http://127.0.0.1:8000/tft/player", {
+    const response = await fetch(`http://${django_address}:${django_port}/tft/player`, {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
         headers: {
@@ -134,7 +137,7 @@ export async function UpdateMatchData(puuid: string) {
 }
 
 export async function AnalyzeMatches({puuid} : {puuid: string}) {
-    const response = await fetch(`http://127.0.0.1:8000/tft/summoner/analyze`, {
+    const response = await fetch(`http://${django_address}:${django_port}/tft/summoner/analyze`, {
         method: "GET",
         mode: "cors",
         headers: {
@@ -149,7 +152,7 @@ export async function AnalyzeMatches({puuid} : {puuid: string}) {
 }
 
 export async function MatchRecommendations({puuid} : {puuid: string}) {
-    const response = await fetch(`http://127.0.0.1:8000/tft/summoner/recommendations`, {
+    const response = await fetch(`http://${django_address}:${django_port}/tft/summoner/recommendations`, {
         method: "GET",
         mode: "cors",
         headers: {
@@ -168,7 +171,7 @@ export async function GetPlayerID(playerID: number) {
     const rawFormData = {
         player_id: playerID,
     }
-    const response = await fetch("http://127.0.0.1:8000/tft/playerid", {
+    const response = await fetch(`http://${django_address}:${django_port}/tft/playerid`, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
         body: JSON.stringify(rawFormData),
@@ -187,7 +190,7 @@ export async function GetGameInfo(playerInfo: any) {
         player_name: playerInfo.playername,
         region: playerInfo.region,
     }
-    const response = await fetch("http://127.0.0.1:8000/tft/game/info/playername", {
+    const response = await fetch(`http://${django_address}:${django_port}/tft/game/info/playername`, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
         body: JSON.stringify(rawFormData),
@@ -207,7 +210,7 @@ export async function GetPlayerGames(player_id: any, game_id: any) {
         game_id: game_id,
     }
 
-    const response = await fetch("http://127.0.0.1:8000/tft/game", {
+    const response = await fetch(`http://${django_address}:${django_port}/tft/game`, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin// *default, no-cache, reload, force-cache, only-if-cached
         body: JSON.stringify(rawFormData),
@@ -222,7 +225,7 @@ export async function GetPlayerGames(player_id: any, game_id: any) {
 }
 
 export async function GetGameUnits() {
-    const response = await fetch("http://127.0.0.1:8000/tft/unit/all", {
+    const response = await fetch(`http://${django_address}:${django_port}/tft/unit/all`, {
         method: "GET",
         mode: "cors"
     })
@@ -235,7 +238,7 @@ export async function GetGameUnits() {
 }
 
 export async function GetGameItems() {
-    const response = await fetch("http://127.0.0.1:8000/tft/item/all", {
+    const response = await fetch(`http://${django_address}:${django_port}/tft/item/all`, {
         method: "GET",
         mode: "cors"
     })
