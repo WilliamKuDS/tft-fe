@@ -12,7 +12,6 @@ import { CheckAccountNameAndTag } from "@/components/tft/riot_api";
 import {regions} from "@/app/tft/search/data";
 import SearchPlayerForm from "@/components/tft/search/form";
 import { AISection, DisabledAISection } from "@/components/tft/player/game-ai";
-import { createClient } from '@/components/supabase/server'
 
 function capitalizeFirstLetter(text: string) {
 if (!text) return text;
@@ -87,15 +86,6 @@ function PlayerStatCard(playerData: any) {
 export default async function Home(params: any) {
     const playerInfo = params.params
     const accountData = await validateAndSplit(playerInfo.playername, playerInfo.region)
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    const { data, error, status } = await supabase
-        .from('profiles')
-        .select(`account_tier`)
-        .eq('id', user?.id)
-        .single()
-
-    console.log(data)
 
     if (accountData === null)
     return (
@@ -135,7 +125,7 @@ export default async function Home(params: any) {
         </div>
         <Divider orientation='horizontal'/>
         <Spacer y={5}/>
-        {data?.account_tier === 0 || data === null ? <DisabledAISection /> : <AISection puuid={accountData[3]}/>}
+        {<AISection puuid={accountData[3]}/>}
         <Spacer y={5}/>
         <Divider orientation='horizontal'/>
         <Spacer y={5}/>
