@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import {Select, SelectItem} from "@nextui-org/select";
 import {Tabs, Tab} from "@nextui-org/tabs";
-import { DatabaseTableAugments, DatabaseTableUnits } from "@/components/tft/database/database-table";
+import { DatabaseTableAugments, DatabaseTableTraits, DatabaseTableUnits, DatabaseTableItems } from "@/components/tft/database/database-table";
 import { Spacer } from "@nextui-org/spacer";
 
 type Key = string | number;
@@ -30,7 +30,7 @@ export default function DatabaseSelect({setData, patchData}: {setData: any, patc
     };
 
     return (
-        <div className="flex flex-col gap-2 w-full max-w-6xl mx-auto text-center">
+        <div className="flex flex-col gap-2 w-full max-w-8xl mx-auto text-center">
             <div className="flex justify-center items-center gap-2.5">
                 <Select
                 label="Select Set"
@@ -70,14 +70,13 @@ export default function DatabaseSelect({setData, patchData}: {setData: any, patc
                 className="flex justify-center"
             >
                 <Tab key="augments" title="Augments">
-                    {/* <DatabaseTableAugments patch={currentPatch}/> */}
-                    <p>WIP</p>
+                    <DatabaseTableAugments patch={currentPatch}/>
                 </Tab>
                 <Tab key="items" title="Items">
-                    <p>WIP</p>
+                    <DatabaseTableItems patch={currentPatch}/>
                 </Tab>
                 <Tab key="traits" title="Traits">
-                    <p>WIP</p>
+                    <DatabaseTableTraits patch={currentPatch}/>
                 </Tab>
                 <Tab key="units" title="Units">
                     <DatabaseTableUnits patch={currentPatch}/>

@@ -1,119 +1,255 @@
-'use client'
+'use client';
+
 import {
-    Table,
-    TableHeader,
-    TableBody,
-    TableColumn,
-    TableRow,
-    TableCell
-  } from "@nextui-org/table";
-import { useEffect, useState } from "react";
+  Table,
+  TableHeader,
+  TableBody,
+  TableColumn,
+  TableRow,
+  TableCell
+} from "@nextui-org/table";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { GetAugmentsByPatch } from "@/components/tft/django_api/augment_api";
-import { GetUnitsByPatch } from "@/components/tft/django_api/units_api";
+import { GetUnitsByPatch } from "@/components/tft/django_api/unit_api";
+import { GetTraitsByPatch } from "@/components/tft/django_api/trait_api";
+import { GetItemsByPatch } from "@/components/tft/django_api/item_api";
+import { Spinner } from "@nextui-org/spinner";
 
-const getKeyValue = (obj: any, key: string) => {
-  return obj[key];
-};
+function flattenObject(obj: any, prefix = ''): any {
+  return Object.keys(obj).reduce((acc: any, k: string) => {
+    const pre = prefix.length ? prefix + '.' : '';
+    if (Array.isArray(obj[k])) {
+      acc[pre + k] = JSON.stringify(obj[k]);
+    } else {
+      acc[pre + k] = obj[k];
+    }
+    return acc;
+  }, {});
+}
 
-export function DatabaseTableAugments({patch}: {patch: string | undefined}) {
-  const [augmentData, setAugmentData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false)
-  console.log(patch)
-  
+const ROWS_PER_FETCH = 20;
+
+function useDatabaseTable(patch: string | undefined, fetchFunction: Function) {
+  const [data, setData] = useState<any[]>([]);
+  const [columns, setColumns] = useState<{ key: string, label: string }[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastElementRef = useCallback((node: HTMLElement | null) => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prevPage => prevPage + 1);
+      }
+    });
+    if (node) observer.current.observe(node);
+  }, [loading, hasMore]);
+
   useEffect(() => {
-    if (patch !== undefined) {
-      const fetchData = async () => {
-          try {
-              const response = await GetAugmentsByPatch({patch});
-              setAugmentData(response);
-          } catch (error) {
-              console.error(error);
-          }
-      };
-        fetchData();
-    }
-    else {
-      setAugmentData([])
-    }
+    setData([]);
+    setPage(1);
+    setHasMore(true);
   }, [patch]);
 
-  console.log(augmentData)
+  useEffect(() => {
+    if (patch === undefined) {
+      setData([]);
+      setColumns([]);
+      return;
+    }
+
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetchFunction({ patch, page, pageSize: ROWS_PER_FETCH });
+        const newData = response.results.map((item: any) => flattenObject(item));
+
+        setData(prevData => [...prevData, ...newData]);
+        setHasMore(response.results.length === ROWS_PER_FETCH);
+
+        const excludedKeys = ['api_name', 'icon'];
+        if (page === 1 && newData.length > 0) {
+          const keys = Object.keys(newData[0]).filter(key => !excludedKeys.includes(key));
+          setColumns(keys.map(key => ({ key, label: key })));
+        }
+      } catch (error) {
+        setError("Failed to fetch data");
+        console.error(error);
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [patch, page]);
+
+  return { data, columns, loading, error, lastElementRef };
+}
+
+export function DatabaseTableAugments({ patch }: { patch: string | undefined }) {
+  const { data, columns, loading, error, lastElementRef } = useDatabaseTable(patch, GetAugmentsByPatch);
+
   return (
-    <p>teheh</p>
-    // <Table aria-label="Example table with dynamic content">
-    //   <TableHeader columns={columns}>
-    //     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-    //   </TableHeader>
-    //   <TableBody items={rows}>
-    //     {(item) => (
-    //       <TableRow key={item.key}>
-    //         {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
-    //       </TableRow>
-    //     )}
-    //   </TableBody>
-    // </Table>
+    <div className="overflow-hidden w-full">
+      {patch === undefined ? (
+        <p>Please select a patch</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : columns.length === 0 ? (
+        <Spinner />
+      ) : (
+        <>
+          <Table aria-label="Augment Table" className="w-full">
+            <TableHeader>
+              {columns.map(column => (
+                <TableColumn key={column.key}>{column.label}</TableColumn>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {data.map((item, index) => (
+                <TableRow key={item.id || item.api_name || index}>
+                  {columns.map(column => (
+                    <TableCell key={column.key}>
+                      {typeof item[column.key] === 'object'
+                        ? JSON.stringify(item[column.key])
+                        : item[column.key]}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          {loading && <Spinner />}
+          <div ref={lastElementRef} style={{ height: '20px' }}></div>
+        </>
+      )}
+    </div>
   );
 }
 
-export function DatabaseTableUnits({patch}: {patch: string | undefined}) {
-  const [unitsData, setUnitsData] = useState<any[]>([]);
-  const [columns, setColumns] = useState<{ key: string, label: string }[]>([]);
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null);
-
-
-  useEffect(() => {
-    if (patch !== undefined) {
-        const fetchData = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const response = await GetUnitsByPatch({ patch });
-                setUnitsData(response);
-
-                if (response.length > 0) {
-                    // Dynamically create columns based on the keys of the first object
-                    const keys = Object.keys(response[0]);
-                    const dynamicColumns = keys.map(key => ({ key, label: key }));
-                    setColumns(dynamicColumns);
-                } else {
-                    setColumns([]);
-                }
-            } catch (error) {
-                setError("Failed to fetch data");
-                console.error(error);
-            }
-            setLoading(false);
-        };
-        fetchData();
-    } else {
-        setUnitsData([]);
-        setColumns([]);
-    }
-  }, [patch]);
+export function DatabaseTableItems({ patch }: { patch: string | undefined }) {
+  const { data, columns, loading, error, lastElementRef } = useDatabaseTable(patch, GetItemsByPatch);
 
   return (
-    <div className="flex justify-center items-center gap-2.5">
-          {loading ? (
-              <p>Loading...</p>
-          ) : error ? (
-              <p>{error}</p>
-          ) : columns.length === 0 ? (
-              <p>No data available</p>
-          ) : (
-              <Table aria-label="Example table with dynamic content">
-                  <TableHeader columns={columns}>
-                      {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-                  </TableHeader>
-                  <TableBody items={unitsData}>
-                      {(item) => (
-                          <TableRow key={item.api_name || item.id || Math.random()}>
-                              {(columnKey) => <TableCell>{getKeyValue(item, columnKey.toString())}</TableCell>}
-                          </TableRow>
-                      )}
-                  </TableBody>
-              </Table>
-          )}
-      </div>
+    <div className="flex flex-col gap-4">
+      {patch === undefined ? (
+        <p>Please select a patch</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : columns.length === 0 ? (
+        <Spinner />
+      ) : (
+        <>
+          <Table aria-label="Item Table">
+            <TableHeader>
+              {columns.map(column => (
+                <TableColumn key={column.key}>{column.label}</TableColumn>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {data.map((item, index) => (
+                <TableRow key={item.id || item.api_name || index}>
+                  {columns.map(column => (
+                    <TableCell key={column.key}>
+                      {typeof item[column.key] === 'object'
+                        ? JSON.stringify(item[column.key])
+                        : item[column.key]}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          {loading && <Spinner />}
+          <div ref={lastElementRef} style={{ height: '20px' }}></div>
+        </>
+      )}
+    </div>
+  );
+}
+
+export function DatabaseTableTraits({ patch }: { patch: string | undefined }) {
+  const { data, columns, loading, error, lastElementRef } = useDatabaseTable(patch, GetTraitsByPatch);
+
+  return (
+    <div className="flex flex-col gap-4">
+      {patch === undefined ? (
+        <p>Please select a patch</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : columns.length === 0 ? (
+        <Spinner />
+      ) : (
+        <>
+          <Table aria-label="Trait Table">
+            <TableHeader>
+              {columns.map(column => (
+                <TableColumn key={column.key}>{column.label}</TableColumn>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {data.map((item, index) => (
+                <TableRow key={item.id || item.api_name || index}>
+                  {columns.map(column => (
+                    <TableCell key={column.key}>
+                      {typeof item[column.key] === 'object'
+                        ? JSON.stringify(item[column.key])
+                        : item[column.key]}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          {loading && <Spinner />}
+          <div ref={lastElementRef} style={{ height: '20px' }}></div>
+        </>
+      )}
+    </div>
+  );
+}
+
+export function DatabaseTableUnits({ patch }: { patch: string | undefined }) {
+  const { data, columns, loading, error, lastElementRef } = useDatabaseTable(patch, GetUnitsByPatch);
+
+  return (
+    <div className="flex flex-col gap-4">
+      {patch === undefined ? (
+        <p>Please select a patch</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : columns.length === 0 ? (
+        <Spinner />
+      ) : (
+        <>
+          <Table aria-label="Unit Table">
+            <TableHeader>
+              {columns.map(column => (
+                <TableColumn key={column.key}>{column.label}</TableColumn>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {data.map((item, index) => (
+                <TableRow key={item.id || item.api_name || index}>
+                  {columns.map(column => (
+                    <TableCell key={column.key}>
+                      {typeof item[column.key] === 'object'
+                        ? JSON.stringify(item[column.key])
+                        : item[column.key]}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          {loading && <Spinner />}
+          <div ref={lastElementRef} style={{ height: '20px' }}></div>
+        </>
+      )}
+    </div>
   );
 }

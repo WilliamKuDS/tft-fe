@@ -3,7 +3,7 @@
 const django_address = process.env.DJANGO_ADDRESS;
 const django_port = process.env.DJANGO_PORT;
 
-export async function GetAugmentsByPatch({
+export async function GetItemsByPatch({
     patch,
     page = 1,
     pageSize = 20,
@@ -14,7 +14,7 @@ export async function GetAugmentsByPatch({
     pageSize?: number,
     orderBy?: string
   }) {
-    const url = new URL(`http://${django_address}:${django_port}/tft/augment/all/patch`);
+    const url = new URL(`http://${django_address}:${django_port}/tft/item/all/patch`);
     url.searchParams.append('patch', patch || '');
     url.searchParams.append('page', page.toString());
     url.searchParams.append('page_size', pageSize.toString());
